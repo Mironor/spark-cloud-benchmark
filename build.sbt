@@ -34,6 +34,8 @@ sparkSubmitSparkArgs := Seq(
 //which class to use as main
 mainClass in assembly := Some("ski.bedryt.Main")
 
+assemblyJarName in assembly := "benchmark.jar"
+
 //mergeStrategy is used by assembly to resolve conflicting classpaths
 // *NOTE* there may be differences in mergeStrategy for Spark 2.X and Spark 1.X, please keep that in mind
 assemblyMergeStrategy in assembly := {

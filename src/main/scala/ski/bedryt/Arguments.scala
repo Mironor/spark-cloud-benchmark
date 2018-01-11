@@ -21,9 +21,9 @@ object Arguments {
     )
 
     private val integrationTestsArgument = opt[Boolean](
-      "integrationTests",
+      "pi",
       noshort = true,
-      descr = "Runs integration tests (the test data should fit on driver!)"
+      descr = "Runs a simple PI calculation in case you just want to see if your platform works"
     )
 
     verify()

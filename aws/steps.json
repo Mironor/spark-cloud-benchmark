@@ -1,0 +1,29 @@
+[
+  {
+    "Args": [
+      "spark-submit",
+
+      "--deploy-mode",
+      "cluster",
+
+      "--driver-memory",
+      "8g",
+
+      "--executor-memory",
+      "5g",
+
+      "--executor-cores",
+      "2",
+
+      "--class",
+      "ski.bedryt.Main",
+
+      "s3://spark-cloud-benchmark-oregon/emr/benchmark.jar"
+    ],
+    "Type": "CUSTOM_JAR",
+    "ActionOnFailure": "CONTINUE",
+    "Jar": "command-runner.jar",
+    "Properties": "",
+    "Name": "Spark application benchmark"
+  }
+]

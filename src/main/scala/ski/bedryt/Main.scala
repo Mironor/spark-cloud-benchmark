@@ -1,9 +1,10 @@
 package ski.bedryt
 
 import com.typesafe.config.ConfigFactory
-import ski.bedryt.utils.XmlToCsvTransformer
+import scala.math.random
+import ski.bedryt.utils.{Spark, XmlToCsvTransformer}
 
-object Main extends App{
+object Main extends App {
 
   val arguments = Arguments(args)
 
@@ -21,46 +22,34 @@ object Main extends App{
   lazy val pathToUsersCsv = config.getString("benchmark.files.csv.users")
   lazy val pathToBadgesCsv = config.getString("benchmark.files.csv.badges")
 
-  if (arguments.integrationTests) runIntegrationTests()
+  if (arguments.integrationTests) runPi()
 
-  private def runIntegrationTests(): Unit ={
-    val pathToExpectedCommentsCsv = config.getString("benchmark.files.expected.csv.comments")
-    val pathToExpectedUsersCsv = config.getString("benchmark.files.expected.csv.users")
-    val pathToExpectedBadgesCsv = config.getString("benchmark.files.expected.csv.badges")
+  Spark.session.stop()
 
-    convertComments()
-    convertUsers()
-    convertBadges()
-
-    val commentsCsvGenerated = XmlToCsvTransformer.readAsText(pathToCommentsCsv).collect().mkString("")
-    val commentsCsvExpected = XmlToCsvTransformer.readAsText(pathToExpectedCommentsCsv).collect().mkString("")
-
-    assert(commentsCsvGenerated == commentsCsvExpected)
-
-    val usersCsvGenerated = XmlToCsvTransformer.readAsText(pathToUsersCsv).collect().mkString("")
-    val usersCsvExpected = XmlToCsvTransformer.readAsText(pathToExpectedUsersCsv).collect().mkString("")
-
-    assert(usersCsvGenerated == usersCsvExpected)
-
-    val badgesCsvGenerated = XmlToCsvTransformer.readAsText(pathToBadgesCsv).collect().mkString("")
-    val badgesCsvExpected = XmlToCsvTransformer.readAsText(pathToExpectedBadgesCsv).collect().mkString("")
-
-    assert(badgesCsvGenerated == badgesCsvExpected)
+  def runPi(): Unit = {
+    val slices = 2
+    val n = math.min(100000L * slices, Int.MaxValue).toInt // avoid overflow
+    val count = Spark.session.sparkContext.parallelize(1 until n, slices).map { i =>
+      val x = random * 2 - 1
+      val y = random * 2 - 1
+      if (x * x + y * y < 1) 1 else 0
+    }.reduce(_ + _)
+    println("BENCHMARK: Pi is roughly " + 4.0 * count / n)
   }
 
-  private def convertComments(): Unit ={
+  def convertComments(): Unit = {
     val commentsXml = XmlToCsvTransformer.readAsText(pathToCommentsXml)
     val commentsCsv = XmlToCsvTransformer.xmlToCsv(commentsXml, commentsHeader)
     XmlToCsvTransformer.writeAsText(commentsCsv, pathToCommentsCsv)
   }
 
-  private def convertUsers(): Unit ={
+  def convertUsers(): Unit = {
     val usersXml = XmlToCsvTransformer.readAsText(pathToUsersXml)
     val usersCsv = XmlToCsvTransformer.xmlToCsv(usersXml, usersHeader)
     XmlToCsvTransformer.writeAsText(usersCsv, pathToUsersCsv)
   }
 
-  private def convertBadges(): Unit ={
+  def convertBadges(): Unit = {
     val badgesXml = XmlToCsvTransformer.readAsText(pathToBadgesXml)
     val badgesCsv = XmlToCsvTransformer.xmlToCsv(badgesXml, badgesHeader)
     XmlToCsvTransformer.writeAsText(badgesCsv, pathToBadgesCsv)
