@@ -27,7 +27,7 @@ object Reader {
   private[utils] def resolveAbsolutePath(path: String) = {
     val currentDirectory = new java.io.File(".").getCanonicalPath
 
-    if (path.startsWith("hdfs://") || path.startsWith("file://") || path.startsWith("s3://")) path
+    if (path.startsWith("hdfs://") || path.startsWith("file://") || path.startsWith("s3://") || path.startsWith("s3a://")) path
     else {
       if (System.getProperty("os.name").toLowerCase.startsWith("windows")) s"$currentDirectory/$path"
       else s"file://$currentDirectory/$path"

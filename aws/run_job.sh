@@ -13,5 +13,5 @@ aws emr create-cluster \
 --service-role EMR_DefaultRole \
 --enable-debugging \
 --name 'Spark benchmark' \
---scale-down-behavior TERMINATE_AT_INSTANCE_HOUR \
+--scale-down-behavior TERMINATE_AT_TASK_COMPLETION \
 --region us-west-2

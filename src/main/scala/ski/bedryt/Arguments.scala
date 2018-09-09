@@ -26,10 +26,17 @@ object Arguments {
       descr = "Runs a simple PI calculation in case you just want to see if your platform works"
     )
 
+    private val trivialAggregationsArgument = opt[Boolean](
+      "trivial",
+      noshort = true,
+      descr = "Runs trivial aggregations (like count) on some data"
+    )
+
     verify()
 
     val xmlToCsv: Boolean = xmlToCsvArgument.getOrElse(false)
     val integrationTests: Boolean = integrationTestsArgument.getOrElse(false)
+    val trivialAggregations: Boolean = trivialAggregationsArgument.getOrElse(false)
 
   }
 }

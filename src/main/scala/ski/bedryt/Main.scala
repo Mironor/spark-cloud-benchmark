@@ -1,8 +1,10 @@
 package ski.bedryt
 
 import com.typesafe.config.ConfigFactory
+import ski.bedryt.aggregations.TrivialAggregations
+
 import scala.math.random
-import ski.bedryt.utils.{Spark, Reader}
+import ski.bedryt.utils.{Reader, Spark}
 
 object Main extends App {
 
@@ -15,8 +17,7 @@ object Main extends App {
   lazy val pathToBadgesCsv = config.getString("benchmark.files.csv.badges")
 
   if (arguments.integrationTests) runPi()
-
-  Spark.session.stop()
+  if (arguments.trivialAggregations) runTrivialAggregations()
 
   def runPi(): Unit = {
     val slices = 2
@@ -27,6 +28,13 @@ object Main extends App {
       if (x * x + y * y < 1) 1 else 0
     }.reduce(_ + _)
     println("BENCHMARK: Pi is roughly " + 4.0 * count / n)
+  }
+
+  def runTrivialAggregations(): Unit = {
+    println(pathToBadgesCsv)
+    val badges = Reader.readBadges(pathToBadgesCsv)
+    val badgesCount = TrivialAggregations.countBadges(badges)
+    println(s"Badges count: $badgesCount")
   }
 
 }
