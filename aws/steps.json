@@ -19,12 +19,12 @@
       "4",
 
       "--driver-java-options",
-      "-Dbenchmark.files.csv.badges=s3://spark-cloud-benchmark-oregon/data/stackoverflow/badges/ -Dbenchmark.files.csv.comments=file:///resources/csv/comments.csv",
+      "-Dbenchmark.files.csv.badges=s3a://spark-cloud-benchmark-oregon/data/stackoverflow/csv/badges/ -Dbenchmark.files.csv.comments=file:///resources/csv/comments.csv",
 
       "--class",
       "ski.bedryt.Main",
 
-      "s3://spark-cloud-benchmark-oregon/emr/benchmark.jar",
+      "s3a://spark-cloud-benchmark-oregon/emr/benchmark.jar",
 
       "--trivial"
     ],

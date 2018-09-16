@@ -1,6 +1,5 @@
 package ski.bedryt.utils
 
-import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.Dataset
 import ski.bedryt.model.Schema.Badge
 
@@ -14,7 +13,10 @@ object Reader {
     .format("csv")
     .schema(Badge.schema)
     .option("header", "true")
-    .load(resolveAbsolutePath(path)).as[Badge]
+    .option("mode", "DROPMALFORMED")
+    .load(resolveAbsolutePath(path))
+    .toDF(Badge.fieldNames:_*) // some columns in the source csv have names equivalent to Scala keywords, this renames them
+    .as[Badge]
 
   /**
     * Spark's "input" function require an absolute path to the source.

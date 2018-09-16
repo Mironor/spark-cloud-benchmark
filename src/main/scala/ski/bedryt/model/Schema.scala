@@ -6,22 +6,23 @@ import org.apache.spark.sql.types._
 
 object Schema {
 
-  case class Badge(Id: Long,
-                   UserId: Long,
-                   Name: String,
-                   Date: Date,
-                   Class: Int,
-                   TagBased: Boolean)
+  case class Badge(id: Long,
+                   name: String,
+                   date: Date,
+                   userId: Long,
+                   classId: Int,
+                   tagBased: Boolean)
 
   object Badge{
     val schema = StructType(Seq(
-      StructField("Id", LongType),
-      StructField("UserId", LongType),
-      StructField("Name", StringType),
-      StructField("Date", DateType),
-      StructField("Class", IntegerType),
-      StructField("TagBased", BooleanType)
+      StructField("id", LongType),
+      StructField("name", StringType),
+      StructField("date", DateType),
+      StructField("user_id", LongType),
+      StructField("class", IntegerType),
+      StructField("tag_based", BooleanType)
     ))
-  }
 
+    val fieldNames = Seq("id", "name", "date", "userId", "classId", "tagBased")
+  }
 }

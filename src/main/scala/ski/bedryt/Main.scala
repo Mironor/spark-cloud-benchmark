@@ -30,11 +30,20 @@ object Main extends App {
     println("BENCHMARK: Pi is roughly " + 4.0 * count / n)
   }
 
+  private def timed[T](block: => T, description: String = "unnamed"): T = {
+    val timeStart = System.nanoTime()
+    val result = block    // call-by-name
+    val timeEnd = System.nanoTime()
+    println(s"Elapsed time ($description): " + (timeEnd - timeStart)/1000000 + "ms")
+    result
+  }
+
   def runTrivialAggregations(): Unit = {
-    println(pathToBadgesCsv)
     val badges = Reader.readBadges(pathToBadgesCsv)
-    val badgesCount = TrivialAggregations.countBadges(badges)
+    val badgesCount = timed(TrivialAggregations.countBadges(badges), "countBadges")
+    val badgesDistinctCount = timed(TrivialAggregations.countDistinctBadges(badges), "countDistinctBadges")
     println(s"Badges count: $badgesCount")
+    println(s"Badges distinct count: $badgesDistinctCount")
   }
 
 }
